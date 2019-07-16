@@ -28,22 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.btn_Convert = new System.Windows.Forms.Button();
-            this.dgvMusicSheet = new System.Windows.Forms.DataGridView();
             this.txtFolder = new System.Windows.Forms.TextBox();
-            this.axAcroPDF = new AxAcroPDFLib.AxAcroPDF();
+            this.dgvMusicSheet = new System.Windows.Forms.DataGridView();
             this.col_MeargeCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.col_FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_Instrument = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_Part = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMusicSheet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.axAcroPDF)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -57,12 +57,12 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.btn_Convert);
-            this.splitContainer1.Panel1.Controls.Add(this.dgvMusicSheet);
             this.splitContainer1.Panel1.Controls.Add(this.txtFolder);
+            this.splitContainer1.Panel1.Controls.Add(this.dgvMusicSheet);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.axAcroPDF);
+            this.splitContainer1.Panel2.Controls.Add(this.webBrowser1);
             this.splitContainer1.Size = new System.Drawing.Size(949, 554);
             this.splitContainer1.SplitterDistance = 440;
             this.splitContainer1.TabIndex = 4;
@@ -76,6 +76,18 @@
             this.btn_Convert.TabIndex = 3;
             this.btn_Convert.Text = "変換";
             this.btn_Convert.UseVisualStyleBackColor = true;
+            // 
+            // txtFolder
+            // 
+            this.txtFolder.AllowDrop = true;
+            this.txtFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtFolder.Location = new System.Drawing.Point(3, 3);
+            this.txtFolder.Name = "txtFolder";
+            this.txtFolder.Size = new System.Drawing.Size(434, 19);
+            this.txtFolder.TabIndex = 1;
+            this.txtFolder.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtFolder_DragDrop);
+            this.txtFolder.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtFolder_DragEnter);
             // 
             // dgvMusicSheet
             // 
@@ -99,30 +111,7 @@
             this.dgvMusicSheet.TabIndex = 2;
             this.dgvMusicSheet.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMusicSheet_CellEnter);
             this.dgvMusicSheet.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dgvMusicSheet_EditingControlShowing);
-            // 
-            // txtFolder
-            // 
-            this.txtFolder.AllowDrop = true;
-            this.txtFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtFolder.Location = new System.Drawing.Point(3, 3);
-            this.txtFolder.Name = "txtFolder";
-            this.txtFolder.Size = new System.Drawing.Size(434, 19);
-            this.txtFolder.TabIndex = 1;
-            this.txtFolder.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtFolder_DragDrop);
-            this.txtFolder.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtFolder_DragEnter);
-            // 
-            // axAcroPDF
-            // 
-            this.axAcroPDF.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.axAcroPDF.Enabled = true;
-            this.axAcroPDF.Location = new System.Drawing.Point(3, 3);
-            this.axAcroPDF.Name = "axAcroPDF";
-            this.axAcroPDF.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axAcroPDF.OcxState")));
-            this.axAcroPDF.Size = new System.Drawing.Size(499, 548);
-            this.axAcroPDF.TabIndex = 0;
+            this.dgvMusicSheet.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMusicSheet_RowEnter);
             // 
             // col_MeargeCheck
             // 
@@ -162,6 +151,20 @@
             this.col_Part.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.col_Part.Width = 80;
             // 
+            // webBrowser1
+            // 
+            this.webBrowser1.Location = new System.Drawing.Point(3, 3);
+            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.Size = new System.Drawing.Size(499, 541);
+            this.webBrowser1.TabIndex = 1;
+            this.webBrowser1.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser1_DocumentCompleted);
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 500;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -176,7 +179,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvMusicSheet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.axAcroPDF)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -187,11 +189,12 @@
         private System.Windows.Forms.Button btn_Convert;
         private System.Windows.Forms.DataGridView dgvMusicSheet;
         private System.Windows.Forms.TextBox txtFolder;
-        private AxAcroPDFLib.AxAcroPDF axAcroPDF;
         private System.Windows.Forms.DataGridViewCheckBoxColumn col_MeargeCheck;
         private System.Windows.Forms.DataGridViewTextBoxColumn col_FileName;
         private System.Windows.Forms.DataGridViewTextBoxColumn col_Instrument;
         private System.Windows.Forms.DataGridViewComboBoxColumn col_Part;
+        private System.Windows.Forms.WebBrowser webBrowser1;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

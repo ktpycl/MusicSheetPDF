@@ -17,40 +17,21 @@ namespace MusicSheetPDF
     {
         public string[] Parts = { "", "1st", "2nd", "3rd", "4th", "5th", "solo" };
 
-        private Dictionary<String, ClassInstrument> instrumentDic = new Dictionary<string, ClassInstrument>();
+        Dictionary<string, ClassInstrument.Detail> InstrumentDictionaly = new Dictionary<string, ClassInstrument.Detail>();
+
         bool searchFlg;
         String firstStr;
         String secondStr;
-
-        public void initInstrumentDic()
-        {
-            ClassInstrument clsInst = new ClassInstrument();
-            clsInst.ShortName = "TP";
-            clsInst.FullName = "Trumpet";
-            clsInst.SheetWriteFlg = true;
-            clsInst.Order = 1;
-
-            instrumentDic.Add(clsInst.ShortName, clsInst);
-
-            clsInst = new ClassInstrument();
-            clsInst.ShortName = "TB";
-            clsInst.FullName = "Trombone";
-            clsInst.SheetWriteFlg = true;
-            clsInst.Order = 2;
-
-            instrumentDic.Add(clsInst.ShortName, clsInst);
-
-            searchFlg = false;
-            firstStr = "";
-            secondStr = "";
-
-        }
 
         public MainForm()
         {
             InitializeComponent();
 
-            initInstrumentDic();
+            InstrumentDictionaly = ClassInstrument.readXml();
+
+            searchFlg = false;
+            firstStr = "";
+            secondStr = "";
         }
 
         //---------------------
@@ -106,20 +87,19 @@ namespace MusicSheetPDF
 
                 //イベントハンドラを削除
                 tb.KeyUp -=
-                    new KeyEventHandler(dataGridViewTextBox_KeyUp);
+                    new KeyEventHandler(DataGridViewTextBox_KeyUp);
 
                 //該当する列か調べる
                 if (dgv.CurrentCell.OwningColumn.Name == "col_Instrument")
                 {
                     //KeyUpイベントハンドラを追加
                     tb.KeyUp +=
-                        new KeyEventHandler(dataGridViewTextBox_KeyUp);
+                        new KeyEventHandler(DataGridViewTextBox_KeyUp);
                 }
             }
         }
 
-        //DataGridViewに表示されているテキストボックスのKeyUpイベントハンドラ
-        private void dataGridViewTextBox_KeyUp(object sender, KeyEventArgs e)
+        private void DataGridViewTextBox_KeyUp(object sender, KeyEventArgs e)
         {
             Console.WriteLine((char)e.KeyCode);
             if (e.Control == true)
@@ -132,7 +112,7 @@ namespace MusicSheetPDF
                 {
                     secondStr = ((char)e.KeyCode).ToString();
 
-                    ClassInstrument clsInst = instrumentDic[firstStr + secondStr];
+                    ClassInstrument.Detail clsInst = InstrumentDictionaly[firstStr + secondStr];
                     if (clsInst != null)
                     {
                         ((TextBox)sender).Text = clsInst.FullName;
@@ -142,14 +122,6 @@ namespace MusicSheetPDF
                         if (activeColIndex == 2)
                         {
                             activeColIndex = 3;
-                        } else if (activeColIndex == 3)
-                        {
-                            activeColIndex = 1;
-                            if (dgvMusicSheet.RowCount > activeRowIndex)
-                            {
-                                activeRowIndex++;
-                            }
-
                         }
                         dgvMusicSheet[activeColIndex, activeRowIndex].Selected = true;
                     }
@@ -177,6 +149,28 @@ namespace MusicSheetPDF
             {
                 dgvMusicSheet.BeginEdit(true);
             }
+        }
+
+        private void dgvMusicSheet_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgvMusicSheet.RowCount > 1)
+            {
+                string pdfname = txtFolder.Text + (string)dgvMusicSheet[1, dgvMusicSheet.SelectedCells[0].RowIndex].Value;
+
+                webBrowser1.Navigate(pdfname);
+            }
+        }
+
+        private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            dgvMusicSheet.Focus();
+            timer1.Start();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            timer1.Stop();
+            dgvMusicSheet.Focus();
         }
     }
 }
